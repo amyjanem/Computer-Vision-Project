@@ -37,7 +37,7 @@ class Rock_Paper_Scissors:
         cap = cv2.VideoCapture(0)
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-        countdown() #countdown function called here to start countdown while rest works in background?
+        countdown()  
         end_time = time.time() + 3
         
         while end_time > time.time():
@@ -62,7 +62,7 @@ class Rock_Paper_Scissors:
         return user_choice
 
 
-    def get_winner(self, user_choice, computer_choice): #needs to be updated to fit class?
+    def get_winner(self, user_choice, computer_choice): 
         """This compares the users choice and the computers choice, and decides the winner"""
 
         while True:
@@ -124,7 +124,7 @@ def play_game():
             return "Congratulations! You won 3 rounds and are the overall winner!"
             break
         
-        elif game.computer_wins  == 3:
+        elif game.computer_wins == 3:
             return 'The computer won 3 rounds, and is thus the overall winner. Try again next time!' 
             break
         
