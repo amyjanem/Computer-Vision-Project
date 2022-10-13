@@ -120,15 +120,15 @@ def play_game():
 
     while True:
         
-        if game.user_wins == 2:
+        if game.user_wins == 3:
             return "Congratulations! You won 3 rounds and are the overall winner!"
             break
         
-        elif game.computer_wins  == 2:
+        elif game.computer_wins  == 3:
             return 'The computer won 3 rounds, and is thus the overall winner. Try again next time!' 
             break
         
-        elif game.user_wins < 2 and game.computer_wins < 2:
+        elif game.user_wins < 3 and game.computer_wins < 3:
             computer_choice = game.get_computer_choice()
             user_choice = game.get_prediction()
             game.get_winner(user_choice, computer_choice)
