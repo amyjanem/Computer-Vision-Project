@@ -24,6 +24,7 @@ class Rock_Paper_Scissors:
         self.computer_wins = 0
         self.user_wins = 0
         self.rps_choices = ["rock", "paper", "scissors"]
+        self.round = 1
 
     def get_computer_choice(self):
         '''This chooses the computer's choice of rock, paper, or scissors aand returns it'''
@@ -38,7 +39,7 @@ class Rock_Paper_Scissors:
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
         countdown()  
-        end_time = time.time() + 3
+        end_time = time.time() + 5
         
         while end_time > time.time():
             ret, frame = cap.read()
@@ -47,7 +48,12 @@ class Rock_Paper_Scissors:
             normalized_image = (image_np.astype(np.float32) / 127.0) - 1 # Normalize the image
             data[0] = normalized_image
             prediction = model.predict(data)
+
+            cv2.putText(frame, f"Round {self.round}", (60, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.putText(frame, f"Your wins: {self.user_wins}", (60, 350), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
+            cv2.putText(frame, f"Computer wins: {self.computer_wins}", (60, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
             cv2.imshow('frame', frame)
+            
             print(prediction)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -69,17 +75,20 @@ class Rock_Paper_Scissors:
 
             if user_choice == computer_choice:
                 print(f"\nYou and the computer both chose {computer_choice}. It's a tie!\n")
+                self.round +=1
                 break
 
             elif user_choice == "rock":
                 if computer_choice == "paper":
                     print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
                     self.computer_wins += 1
+                    self.round +=1
                     print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     break
                 else:
                     print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
                     self.user_wins +=1
+                    self.round +=1
                     print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     break
                         
@@ -87,11 +96,13 @@ class Rock_Paper_Scissors:
                     if computer_choice == "scissors":
                         print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
                         self.computer_wins += 1
+                        self.round +=1
                         print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                         break
                     else:
                         print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
                         self.user_wins +=1
+                        self.round +=1
                         print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                         break
 
@@ -99,11 +110,13 @@ class Rock_Paper_Scissors:
                 if computer_choice == "rock":
                     print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
                     self.computer_wins += 1
+                    self.round +=1
                     print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     break
                 else:
                     print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
                     self.user_wins +=1
+                    self.round +=1
                     print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     break
 
