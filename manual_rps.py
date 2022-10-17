@@ -5,7 +5,7 @@ import random
 rps_choices = ["rock", "paper", "scissors"]
 
 def get_computer_choice():
-    '''This chooses the computer's choice of rock, paper, or scissors aand returns it'''
+    '''This chooses the computer's choice of rock, paper, or scissors and returns it'''
     computer_choice = random.choice(rps_choices)
     return computer_choice
             
