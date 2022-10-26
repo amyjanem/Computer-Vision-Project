@@ -73,7 +73,6 @@ class Rock_Paper_Scissors:
             self.round +=1
 
 
-
         elif user_choice == "rock" and computer_choice == "paper":
             print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
             self.computer_wins += 1
