@@ -14,7 +14,7 @@ class Rock_Paper_Scissors:
         self.rps_choices = ["rock", "paper", "scissors", "nothing"]
         self.round = 1
 
-    @staticmethod                                              # no need to pass 'self' as this method essentially stands alone and is not related to the instance of the class
+    @staticmethod                                    # no need to pass 'self' as this method essentially stands alone and is not related to the instance of the class
     def countdown(time_amount=3):
         """A simple countdown from 3 seconds"""
     
@@ -35,7 +35,7 @@ class Rock_Paper_Scissors:
     def get_prediction(self, time_amount=3):
         """This interprets the users choice from the webcam and prints rock, paper or scissors based on the highest probability that the user is showing it"""
 
-        model = load_model('keras_model.h5')                    #these 3 lines could be in the init method (w/out initialising them) for if we'd like to see the model/data info
+        model = load_model('keras_model.h5')               #these 3 lines could be in the init method (w/out initialising them) for if we'd like to see the model/data info
         cap = cv2.VideoCapture(0)
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
@@ -67,52 +67,49 @@ class Rock_Paper_Scissors:
     def get_winner(self, user_choice, computer_choice): 
         """This compares the users choice and the computers choice, and decides the winner"""
 
-        # while True:
 
         if user_choice == computer_choice:
             print(f"\nYou and the computer both chose {computer_choice}. It's a tie!\n")
             self.round +=1
 
-        elif user_choice == "rock":
-            if computer_choice == "paper":
-                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                self.computer_wins += 1
-                self.round +=1
-                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+
+
+        elif user_choice == "rock" and computer_choice == "paper":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+            self.computer_wins += 1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                 
-            else:
-                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
-                self.user_wins +=1
-                self.round +=1
-                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+        elif user_choice == "rock" and computer_choice == "scissors":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+            self.user_wins +=1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                                     
-        elif user_choice == "paper":
-                if computer_choice == "scissors":
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                    self.computer_wins += 1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+        elif user_choice == "paper" and computer_choice == "scissors":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+            self.computer_wins += 1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     
-                else:
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
-                    self.user_wins +=1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+        elif user_choice == "paper" and computer_choice == "rock":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+            self.user_wins +=1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                     
 
-        elif user_choice == "scissors":
-            if computer_choice == "rock":
-                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                self.computer_wins += 1
-                self.round +=1
-                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+        elif user_choice == "scissors" and computer_choice == "rock":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+            self.computer_wins += 1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
                 
-            else:
+        elif user_choice == "scissors" and computer_choice == "paper":
                 print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
                 self.user_wins +=1
                 self.round +=1
                 print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-
 
 
 def play_game(): 
