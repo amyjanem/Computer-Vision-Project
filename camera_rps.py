@@ -5,40 +5,40 @@ import cv2
 from keras.models import load_model
 import numpy as np
 
-def countdown(time_amount=3):
-    """A simple countdown from 3 seconds"""
-    
-    print("\nIn 3 seconds, pick Rock, Paper or Scissors\n")
-
-    while time_amount != 0:
-        mins, secs = divmod(time_amount, 60)
-        timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end="\r")
-        time.sleep(1)
-        time_amount -= 1
-
 
 class Rock_Paper_Scissors:
 
     def __init__(self):
         self.computer_wins = 0
         self.user_wins = 0
-        self.rps_choices = ["rock", "paper", "scissors"]
+        self.rps_choices = ["rock", "paper", "scissors", "nothing"]
         self.round = 1
 
+    @staticmethod                                              # no need to pass 'self' as this method essentially stands alone and is not related to the instance of the class
+    def countdown(time_amount=3):
+        """A simple countdown from 3 seconds"""
+    
+        print("\nIn 3 seconds, pick Rock, Paper or Scissors\n")
+
+        while time_amount != 0:
+            mins, secs = divmod(time_amount, 60)
+            timer = '{:02d}:{:02d}'.format(mins, secs)
+            print(timer, end="\r")
+            time.sleep(1)
+            time_amount -= 1
+           
     def get_computer_choice(self):
         '''This chooses the computer's choice of rock, paper, or scissors aand returns it'''
-        computer_choice = random.choice(self.rps_choices)
+        computer_choice = random.choice(self.rps_choices[0:3])          #range through list of rps_choices from 'rock', 'paper' and 'scissors', excluding 'nothing'
         return computer_choice
 
     def get_prediction(self, time_amount=3):
         """This interprets the users choice from the webcam and prints rock, paper or scissors based on the highest probability that the user is showing it"""
 
-        model = load_model('keras_model.h5')
+        model = load_model('keras_model.h5')                    #these 3 lines could be in the init method (w/out initialising them) for if we'd like to see the model/data info
         cap = cv2.VideoCapture(0)
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-        countdown()  
         end_time = time.time() + 5
         
         while end_time > time.time():
@@ -58,10 +58,6 @@ class Rock_Paper_Scissors:
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
                  
-        # After the loop release the cap object
-        cap.release()
-        # Destroy all the windows
-        cv2.destroyAllWindows()
     
         rps_prediction_index = np.argmax(prediction)
         user_choice = self.rps_choices[rps_prediction_index]
@@ -71,57 +67,51 @@ class Rock_Paper_Scissors:
     def get_winner(self, user_choice, computer_choice): 
         """This compares the users choice and the computers choice, and decides the winner"""
 
-        while True:
+        # while True:
 
-            if user_choice == computer_choice:
-                print(f"\nYou and the computer both chose {computer_choice}. It's a tie!\n")
+        if user_choice == computer_choice:
+            print(f"\nYou and the computer both chose {computer_choice}. It's a tie!\n")
+            self.round +=1
+
+        elif user_choice == "rock":
+            if computer_choice == "paper":
+                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+                self.computer_wins += 1
                 self.round +=1
-                break
-
-            elif user_choice == "rock":
-                if computer_choice == "paper":
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                    self.computer_wins += 1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                    break
-                else:
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
-                    self.user_wins +=1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                    break
-                        
-            elif user_choice == "paper":
-                    if computer_choice == "scissors":
-                        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                        self.computer_wins += 1
-                        self.round +=1
-                        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                        break
-                    else:
-                        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
-                        self.user_wins +=1
-                        self.round +=1
-                        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                        break
-
-            elif user_choice == "scissors":
-                if computer_choice == "rock":
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
-                    self.computer_wins += 1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                    break
-                else:
-                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
-                    self.user_wins +=1
-                    self.round +=1
-                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
-                    break
-
+                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+                
             else:
-                break
+                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+                self.user_wins +=1
+                self.round +=1
+                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+                                    
+        elif user_choice == "paper":
+                if computer_choice == "scissors":
+                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+                    self.computer_wins += 1
+                    self.round +=1
+                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+                    
+                else:
+                    print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+                    self.user_wins +=1
+                    self.round +=1
+                    print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+                    
+
+        elif user_choice == "scissors":
+            if computer_choice == "rock":
+                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+                self.computer_wins += 1
+                self.round +=1
+                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+                
+            else:
+                print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+                self.user_wins +=1
+                self.round +=1
+                print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
 
 
 
@@ -130,8 +120,10 @@ def play_game():
     
     game = Rock_Paper_Scissors()
     print("Welcome to the Rock-Paper-Scissors Game! \nLet's begin...")
-
+    
     while True:
+
+        game.countdown()  
         
         if game.user_wins == 3:
             return "Congratulations! You won 3 rounds and are the overall winner!"
@@ -145,6 +137,12 @@ def play_game():
             computer_choice = game.get_computer_choice()
             user_choice = game.get_prediction()
             game.get_winner(user_choice, computer_choice)
+
+    # keeping the below lines in the play_game function keeps the camera window open and doesn't close it at each instance
+    # After the loop release the cap object
+    cap.release()
+    # Destroy all the windows
+    cv2.destroyAllWindows()
       
 
 print(play_game())
