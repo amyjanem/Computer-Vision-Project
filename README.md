@@ -40,41 +40,50 @@ def get_user_choice():
         get_user_choice()
     
 
-def get_winner(user_choice, computer_choice):
+def get_winner(self, user_choice, computer_choice): 
     """This compares the users choice and the computers choice, and decides the winner"""
 
-    while True:
 
-        if user_choice == computer_choice:
-            print(f"You and the computer both chose {computer_choice}. It's a tie!")
-            break
+    if user_choice == computer_choice:
+        print(f"\nYou and the computer both chose {computer_choice}. It's a tie!\n")
+        self.round +=1
 
-        elif user_choice == "rock":
-            if computer_choice == "paper":
-                print(f"You chose {user_choice} and the computer chose {computer_choice}.\nYou lose!")
-                break
-            else:
-                print(f"You chose {user_choice} and the computer chose {computer_choice}.\nYou win!")
-                break
-                      
-        elif user_choice == "paper":
-                if computer_choice == "scissors":
-                    print(f"You chose {user_choice} and the computer chose {computer_choice}.\nYou lose!")
-                    break
-                else:
-                    print(f"You chose {user_choice} and the computer chose {computer_choice}.\nYou win!")
-                    break
+    elif user_choice == "rock" and computer_choice == "paper":
+        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+        self.computer_wins += 1
+        self.round +=1
+        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
 
-        elif user_choice == "scissors":
-            if computer_choice == "rock":
-                print(f"You chose {user_choice} and the computer chose {computer_choice}.\n You lose!")
-                break
-            else:
-                print(f"You chose {user_choice} and the computer chose {computer_choice}.\nYou win!")
-                break
+    elif user_choice == "rock" and computer_choice == "scissors":
+        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+        self.user_wins +=1
+        self.round +=1
+        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
 
-        else:
-            break
+    elif user_choice == "paper" and computer_choice == "scissors":
+        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+        self.computer_wins += 1
+        self.round +=1
+        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+
+    elif user_choice == "paper" and computer_choice == "rock":
+        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+        self.user_wins +=1
+        self.round +=1
+        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+
+    elif user_choice == "scissors" and computer_choice == "rock":
+        print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou lose!\n")
+        self.computer_wins += 1
+        self.round +=1
+        print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+
+    elif user_choice == "scissors" and computer_choice == "paper":
+            print(f"\nYou chose {user_choice} and the computer chose {computer_choice}.\n\nYou win!\n")
+            self.user_wins +=1
+            self.round +=1
+            print (f'You have {self.user_wins} wins and the computer has {self.computer_wins} wins.\n')
+
                 
 def play():
     while True:
@@ -90,18 +99,21 @@ play()
 
 ## Milestone 5
 
-- In this milestone, the webcam is made use of to play Rock, Paper, Scissors. The Teachable Machine model is imported and returns a list of probabilities of which sign the computer thinks the user is showing.
+- In this milestone, the webcam is made use of to play Rock, Paper, Scissors. 
 
-- The highest probability is extracted from this list using the argmax() function as shown in the code below:
-```
-  rps_prediction_index = np.argmax(prediction)
-  user_choice = self.rps_choices[rps_prediction_index]
-  return user_choice
-```
-This is then compared to the computer's choice, and a winner is returned.
+- The class is first initialised so that multiple games can be played until one party wins. This is shown below:
 
-- A countdown function is also created as below:
+```python
+def __init__(self):
+    self.computer_wins = 0
+    self.user_wins = 0
+    self.rps_choices = ["rock", "paper", "scissors", "nothing"]
 ```
+
+- A countdown function is also created, and labelled as a static method as below:
+
+```python
+@staticmethod  
 def countdown(time_amount=3):
     """A simple countdown from 3 seconds"""
     
@@ -115,8 +127,28 @@ def countdown(time_amount=3):
         time_amount -= 1
 ```
 
-- This is called in the get_prediction method, where the machine learning model is used, as below:
+- The get_computer method iterates through the list of rps_choices and ensures that the 'nothing' class is excluded using the range of [0:3]
+
+```python
+    def get_computer_choice(self):
+        '''This chooses the computer's choice of rock, paper, or scissors aand returns it'''
+        computer_choice = random.choice(self.rps_choices[0:3])          
+        return computer_choice
 ```
+
+- The Teachable Machine model is imported and returns a list of probabilities of which sign the computer thinks the user is showing. The highest probability is extracted from this list using the argmax() function as shown in the code below:
+
+```python
+  rps_prediction_index = np.argmax(prediction)
+  user_choice = self.rps_choices[rps_prediction_index]
+  return user_choice
+```
+
+- This is then compared to the computer's choice, and a winner is returned.
+
+- This is called in the get_prediction method, where the machine learning model is used, as below:
+
+```python
 def get_prediction(self, time_amount=3):
         """This interprets the users choice from the webcam and prints rock, paper or scissors based on the highest probability that the user is showing it"""
 
@@ -124,7 +156,6 @@ def get_prediction(self, time_amount=3):
         cap = cv2.VideoCapture(0)
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
-        countdown()  
         end_time = time.time() + 5
         
         while end_time > time.time():
@@ -143,11 +174,6 @@ def get_prediction(self, time_amount=3):
             print(prediction)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-                 
-        # After the loop release the cap object
-        cap.release()
-        # Destroy all the windows
-        cv2.destroyAllWindows()
     
         rps_prediction_index = np.argmax(prediction)
         user_choice = self.rps_choices[rps_prediction_index]
@@ -155,27 +181,31 @@ def get_prediction(self, time_amount=3):
 ```
 
 - The code also keeps track of how many wins each player has, as well as how many rounds have been played. This is with the addition of the below after each round:
-```
+
+```python
 self.computer_wins += 1
 self.round +=1
 ```
 
 or
 
-```
+```python
 self.user_wins += 1
 self.round +=1
 ```
 
 - The overall winner is then announced after a player wins 3 rounds. The below function is created:
-```
+
+```python            
 def play_game(): 
     '''Calling this function will start the game of Rock, Paper, Scissors'''
     
     game = Rock_Paper_Scissors()
     print("Welcome to the Rock-Paper-Scissors Game! \nLet's begin...")
-
+    
     while True:
+
+        game.countdown()  
         
         if game.user_wins == 3:
             return "Congratulations! You won 3 rounds and are the overall winner!"
@@ -189,6 +219,15 @@ def play_game():
             computer_choice = game.get_computer_choice()
             user_choice = game.get_prediction()
             game.get_winner(user_choice, computer_choice)
+
+    # After the loop release the cap object
+    cap.release()
+    # Destroy all the windows
+    cv2.destroyAllWindows()
+      
+
+print(play_game())
+
 ```
 
 
